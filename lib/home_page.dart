@@ -86,11 +86,21 @@ class _HomePageState extends State<HomePage> {
   }
   //task removed
   void taskDeleted(int index){
-    setState(() {
-      toDos.removeAt(index);
-    });
+    
+     setState(() {
+    toDos.removeAt(index);
+  });
+
+  // Update shared preferences after removing the item
+  updateSharedPrefs();
     
   }
+  void updateSharedPrefs() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // Serialize the list to a string and save it in shared preferences
+  prefs.setString("toDos", jsonEncode(toDos));
+}
 
   //controller for text input
   final _controller = TextEditingController();
@@ -100,9 +110,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 200,
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children:  [
             CircleAvatar(
               backgroundColor: Colors.white,
               radius: 40,
